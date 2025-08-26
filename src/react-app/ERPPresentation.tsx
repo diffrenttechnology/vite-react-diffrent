@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Home, Users, Search, CheckCircle, Settings, Play, Pause, RotateCcw, Eye, TrendingUp, AlertTriangle, Lightbulb, Target } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Users, Search, CheckCircle, Settings, Play, Pause, RotateCcw, Eye, TrendingUp, AlertTriangle, Lightbulb, Target } from 'lucide-react';
 
 const ERPPresentation = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
