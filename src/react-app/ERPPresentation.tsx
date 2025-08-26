@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Users, Search, CheckCircle, Settings, Play, Pause, RotateCcw, Eye, TrendingUp, AlertTriangle, Lightbulb, Target } from 'lucide-react';
+import './ERPPresentation.css';
 
 const ERPPresentation = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -394,7 +395,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
   const renderInteractiveChallenges = (slide: any) => {
     return (
-      <div className="h-full overflow-y-auto" style={{backgroundColor: '#F5F0EB'}}>
+      <div className="h-full overflow-y-auto content-slide-bg">
         <div className="p-16">
           <h1 className="text-4xl font-bold text-black mb-4">{slide.content.title}</h1>
           <p className="text-lg text-gray-600 mb-8">Klikk på utfordringene for mer informasjon</p>
@@ -403,16 +404,14 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
             {slide.content.challenges.map((challenge: any, index: number) => (
               <div
                 key={challenge.id}
-                className={`bg-white p-6 rounded-xl shadow-lg border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
-                  selectedChallenge === challenge.id ? 'border-amber-500 ring-4 ring-amber-200' : 'border-gray-200 hover:border-amber-300'
-                }`}
+                className={`challenge-card ${
+                  selectedChallenge === challenge.id ? 'selected' : ''
+                } fade-in-up`}
                 onClick={() => setSelectedChallenge(selectedChallenge === challenge.id ? null : challenge.id)}
-                style={{
-                  animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
-                }}
+                style={{animationDelay: `${index * 0.1}s`}}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-xl font-bold" style={{color: '#a88157'}}>
+                  <h3 className="text-xl font-bold amesto-color">
                     {challenge.number} {challenge.title}
                   </h3>
                   <div className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -429,9 +428,9 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
                     <span className="text-sm text-gray-600">Alvorlighetsgrad</span>
                     <span className="text-sm font-semibold">{challenge.severity}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="severity-bar-container">
                     <div 
-                      className="h-2 rounded-full transition-all duration-1000 ease-out"
+                      className="severity-bar-fill"
                       style={{
                         width: selectedChallenge === challenge.id ? `${challenge.severity}%` : '0%',
                         backgroundColor: challenge.severity >= 85 ? '#ef4444' : challenge.severity >= 70 ? '#f59e0b' : '#10b981'
@@ -464,7 +463,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
   const renderDashboard = (slide: any) => {
     return (
-      <div className="h-full" style={{backgroundColor: '#000'}}>
+      <div className="h-full dashboard-bg">
         <div className="p-16 text-white">
           <h1 className="text-4xl font-bold mb-4">{slide.content.title}</h1>
           <p className="text-xl opacity-80 mb-12">{slide.content.subtitle}</p>
@@ -473,10 +472,8 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
             {slide.content.phases.map((phase: any, index: number) => (
               <div
                 key={index}
-                className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer transform hover:scale-105"
-                style={{
-                  animation: `slideInUp 0.8s ease-out ${index * 0.2}s both`
-                }}
+                className="dashboard-card slide-in-up"
+                style={{animationDelay: `${index * 0.2}s`}}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold">{phase.name}</h3>
@@ -494,9 +491,9 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
                     <span className="text-white/70">Avg. alvorlighet:</span>
                     <span className="font-semibold">{phase.avgSeverity}%</span>
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="progress-bar-container">
                     <div 
-                      className="h-2 rounded-full transition-all duration-1500 ease-out"
+                      className="progress-bar-fill"
                       style={{
                         width: `${phase.avgSeverity}%`,
                         backgroundColor: phase.color
@@ -510,7 +507,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
           <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
             <h3 className="text-2xl font-bold mb-6 flex items-center">
-              <TrendingUp className="mr-3" style={{color: '#a88157'}} />
+              <TrendingUp className="mr-3 amesto-color" />
               Hovedfunn fra undersøkelsen
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -545,13 +542,13 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
     switch (slide.type) {
       case 'title':
         return (
-          <div className="h-full flex flex-col justify-center items-center text-center relative" style={{background: 'linear-gradient(135deg, #000 0%, #333 100%)'}}>
-            <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Cpath d="M 20 0 L 0 0 0 20" fill="none" stroke="white" stroke-width="0.5"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100%" height="100%" fill="url(%23grid)" /%3E%3C/svg%3E")'}}></div>
-            <div className="relative z-10" style={{animation: 'fadeIn 1s ease-out'}}>
+          <div className="h-full flex flex-col justify-center items-center text-center relative title-slide-bg">
+            <div className="absolute inset-0 opacity-5 grid-pattern"></div>
+            <div className="relative z-10 fade-in">
               <div className="text-sm font-medium text-white/80 mb-8 tracking-widest animate-pulse">{slide.content.subtitle}</div>
-              <h1 className="text-5xl font-bold text-white mb-8 max-w-4xl leading-tight" style={{animation: 'slideInUp 1s ease-out 0.3s both'}}>{slide.content.title}</h1>
-              <div className="text-2xl text-white/90 mt-12" style={{animation: 'slideInUp 1s ease-out 0.6s both'}}>{slide.content.company}</div>
-              <div className="mt-8 text-white/60" style={{animation: 'slideInUp 1s ease-out 0.9s both'}}>
+              <h1 className="text-5xl font-bold text-white mb-8 max-w-4xl leading-tight slide-in-up">{slide.content.title}</h1>
+              <div className="text-2xl text-white/90 mt-12 slide-in-up" style={{animationDelay: '0.6s'}}>{slide.content.company}</div>
+              <div className="mt-8 text-white/60 slide-in-up" style={{animationDelay: '0.9s'}}>
                 Klikk for å starte presentasjonen →
               </div>
             </div>
@@ -561,22 +558,22 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
       case 'toc':
         return (
-          <div className="h-full flex flex-col justify-center px-16" style={{backgroundColor: '#F5F0EB'}}>
+          <div className="h-full flex flex-col justify-center px-16 content-slide-bg">
             <div className="text-sm font-medium text-gray-600 mb-4 tracking-widest">RAPPORT</div>
-            <h1 className="text-5xl font-bold text-black mb-12" style={{animation: `slideInLeft 0.8s ease-out`}}>{slide.content.title}</h1>
+            <h1 className="text-5xl font-bold text-black mb-12 slide-in-left">{slide.content.title}</h1>
             <div className="space-y-4 max-w-4xl">
               {slide.content.sections.map((section: any, index: number) => {
                 const IconComponent = section.icon;
                 return (
                   <div 
                     key={index} 
-                    className="border border-gray-200 rounded-lg p-6 bg-white hover:bg-gray-50 cursor-pointer transition-all duration-300 transform hover:scale-102 hover:shadow-lg"
-                    style={{animation: `slideInRight 0.8s ease-out ${index * 0.1}s both`}}
+                    className="border border-gray-200 rounded-lg p-6 bg-white hover:bg-gray-50 cursor-pointer transition-all duration-300 transform hover:scale-102 hover:shadow-lg slide-in-right"
+                    style={{animationDelay: `${index * 0.1}s`}}
                     onClick={() => goToSlide(index + 2)}
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex items-center">
-                        <IconComponent size={24} className="mr-4" style={{color: '#a88157'}} />
+                        <IconComponent size={24} className="mr-4 amesto-color" />
                         <div>
                           <h3 className="text-lg font-bold text-black mb-1">{section.title}</h3>
                           {section.subtitle && <p className="text-gray-700">{section.subtitle}</p>}
@@ -611,16 +608,16 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
     switch (slide.type) {
       case 'content':
         return (
-          <div className="h-full flex flex-col justify-center px-16" style={{backgroundColor: '#F5F0EB'}}>
-            <h1 className="text-3xl font-bold text-black mb-8 max-w-4xl leading-tight" style={{animation: `fadeInUp 0.8s ease-out`}}>{slide.content.title}</h1>
+          <div className="h-full flex flex-col justify-center px-16 content-slide-bg">
+            <h1 className="text-3xl font-bold text-black mb-8 max-w-4xl leading-tight fade-in-up">{slide.content.title}</h1>
             <div className="space-y-6 max-w-4xl">
-              <p className="text-lg text-gray-800 leading-relaxed" style={{animation: `fadeInUp 0.8s ease-out 0.2s both`}}>{slide.content.text}</p>
-              <div className="mt-8" style={{animation: `fadeInUp 0.8s ease-out 0.4s both`}}>
+              <p className="text-lg text-gray-800 leading-relaxed fade-in-up" style={{animationDelay: '0.2s'}}>{slide.content.text}</p>
+              <div className="mt-8 fade-in-up" style={{animationDelay: '0.4s'}}>
                 <p className="text-lg text-gray-800 mb-4">Resultatet er et ærlig bilde av hvilke utfordringer som preger:</p>
                 <ul className="space-y-3">
                   {slide.content.phases.map((phase: string, index: number) => (
-                    <li key={index} className="text-gray-800 flex items-start" style={{animation: `slideInLeft 0.6s ease-out ${0.6 + index * 0.1}s both`}}>
-                      <span className="mr-3 mt-2 w-2 h-2 rounded-full" style={{backgroundColor: '#a88157'}}></span>
+                    <li key={index} className="text-gray-800 flex items-start slide-in-left" style={{animationDelay: `${0.6 + index * 0.1}s`}}>
+                      <span className="mr-3 mt-2 w-2 h-2 rounded-full amesto-bg"></span>
                       {phase}
                     </li>
                   ))}
@@ -633,29 +630,29 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
       case 'phase-intro':
         const IconComponent = slide.content.icon;
         return (
-          <div className="h-full flex items-center" style={{backgroundColor: '#000'}}>
+          <div className="h-full flex items-center phase-intro-bg">
             <div className="w-1/2 h-full relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <IconComponent 
                   size={200} 
                   color={slide.content.color || '#a88157'} 
                   opacity={0.2}
-                  style={{animation: `rotate360 20s linear infinite`}}
+                  className="rotate-360"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/50"></div>
             </div>
             <div className="w-1/2 p-16 text-white">
               <div className="text-8xl font-bold mb-4 animate-pulse" style={{color: slide.content.color || '#a88157'}}>{slide.content.number}</div>
-              <h1 className="text-5xl font-bold mb-4" style={{animation: `slideInRight 0.8s ease-out`}}>{slide.content.title}</h1>
-              <p className="text-xl mb-8 opacity-90" style={{animation: `slideInRight 0.8s ease-out 0.2s both`}}>{slide.content.subtitle}</p>
-              <p className="text-lg mb-8" style={{animation: `slideInRight 0.8s ease-out 0.4s both`}}>{slide.content.description}</p>
+              <h1 className="text-5xl font-bold mb-4 slide-in-right">{slide.content.title}</h1>
+              <p className="text-xl mb-8 opacity-90 slide-in-right" style={{animationDelay: '0.2s'}}>{slide.content.subtitle}</p>
+              <p className="text-lg mb-8 slide-in-right" style={{animationDelay: '0.4s'}}>{slide.content.description}</p>
               
-              <div className="mb-8" style={{animation: `slideInRight 0.8s ease-out 0.6s both`}}>
+              <div className="mb-8 slide-in-right" style={{animationDelay: '0.6s'}}>
                 <h3 className="text-lg font-semibold mb-4" style={{color: slide.content.color || '#a88157'}}>KJENNETEGN PÅ {slide.content.title.toUpperCase()}SFASEN:</h3>
                 <ul className="space-y-3">
                   {slide.content.characteristics.map((char: string, index: number) => (
-                    <li key={index} className="text-white/90 flex items-start" style={{animation: `slideInLeft 0.6s ease-out ${0.8 + index * 0.1}s both`}}>
+                    <li key={index} className="text-white/90 flex items-start slide-in-left" style={{animationDelay: `${0.8 + index * 0.1}s`}}>
                       <span className="mr-3 mt-2 w-1 h-1 rounded-full bg-white"></span>
                       {char}
                     </li>
@@ -663,7 +660,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
                 </ul>
               </div>
 
-              <div className="p-6 rounded-lg border border-white/20 backdrop-blur-sm" style={{backgroundColor: `${slide.content.color || '#a88157'}20`, animation: `fadeIn 0.8s ease-out 1s both`}}>
+              <div className="p-6 rounded-lg border border-white/20 backdrop-blur-sm fade-in" style={{backgroundColor: `${slide.content.color || '#a88157'}20`, animationDelay: '1s'}}>
                 <h4 className="font-semibold mb-2" style={{color: slide.content.color || '#a88157'}}>SPØRSMÅLET DU ØNSKER BESVART ER:</h4>
                 <p className="text-white/90 italic text-lg">{slide.content.question}</p>
               </div>
@@ -673,14 +670,14 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
       case 'conclusion':
         return (
-          <div className="h-full flex items-center justify-center" style={{backgroundColor: '#000'}}>
+          <div className="h-full flex items-center justify-center conclusion-bg">
             <div className="text-center max-w-5xl px-16">
-              <h1 className="text-5xl font-bold text-white mb-6" style={{animation: `fadeInUp 1s ease-out`}}>{slide.content.title}</h1>
-              <h2 className="text-3xl text-white/80 mb-12" style={{animation: `fadeInUp 1s ease-out 0.3s both`}}>{slide.content.subtitle}</h2>
+              <h1 className="text-5xl font-bold text-white mb-6 fade-in-up">{slide.content.title}</h1>
+              <h2 className="text-3xl text-white/80 mb-12 fade-in-up" style={{animationDelay: '0.3s'}}>{slide.content.subtitle}</h2>
               <div className="max-w-4xl mx-auto">
-                <p className="text-xl text-white/90 leading-relaxed whitespace-pre-line" style={{animation: `fadeInUp 1s ease-out 0.6s both`}}>{slide.content.description}</p>
+                <p className="text-xl text-white/90 leading-relaxed whitespace-pre-line fade-in-up" style={{animationDelay: '0.6s'}}>{slide.content.description}</p>
               </div>
-              <div className="mt-12 flex justify-center space-x-4" style={{animation: `fadeInUp 1s ease-out 0.9s both`}}>
+              <div className="mt-12 flex justify-center space-x-4 fade-in-up" style={{animationDelay: '0.9s'}}>
                 <Lightbulb size={32} className="text-yellow-400 animate-pulse" />
                 <Users size={32} className="text-blue-400 animate-bounce" />
                 <TrendingUp size={32} className="text-green-400 animate-pulse" />
@@ -691,17 +688,17 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
 
       case 'what-now':
         return (
-          <div className="h-full flex items-center" style={{backgroundColor: '#F5F0EB'}}>
+          <div className="h-full flex items-center content-slide-bg">
             <div className="w-full p-16">
-              <h1 className="text-6xl font-bold text-black mb-8" style={{animation: `bounceIn 1s ease-out`}}>{slide.content.title}</h1>
-              <p className="text-xl text-gray-800 mb-8 max-w-4xl" style={{animation: `fadeInUp 0.8s ease-out 0.2s both`}}>{slide.content.subtitle}</p>
+              <h1 className="text-6xl font-bold text-black mb-8 bounce-in">{slide.content.title}</h1>
+              <p className="text-xl text-gray-800 mb-8 max-w-4xl fade-in-up" style={{animationDelay: '0.2s'}}>{slide.content.subtitle}</p>
               
-              <div className="mb-8" style={{animation: `fadeInUp 0.8s ease-out 0.4s both`}}>
+              <div className="mb-8 fade-in-up" style={{animationDelay: '0.4s'}}>
                 <p className="text-lg text-gray-800 mb-6">Da er neste steg enkelt:</p>
                 <div className="space-y-6 mb-8">
                   {slide.content.steps.map((step: string, index: number) => (
-                    <div key={index} className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300" style={{animation: `slideInLeft 0.6s ease-out ${0.6 + index * 0.2}s both`}}>
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{backgroundColor: '#a88157'}}>
+                    <div key={index} className="step-card slide-in-left" style={{animationDelay: `${0.6 + index * 0.2}s`}}>
+                      <div className="step-number">
                         {index + 1}
                       </div>
                       <p className="text-gray-800 flex-1">{step}</p>
@@ -711,20 +708,20 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
                 </div>
               </div>
 
-              <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200 mb-8 max-w-4xl hover:shadow-xl transition-all duration-300" style={{animation: `fadeInUp 0.8s ease-out 1s both`}}>
+              <div className="cta-card fade-in-up" style={{animationDelay: '1s'}}>
                 <div className="flex items-start">
-                  <Target className="mr-4 mt-1" style={{color: '#a88157'}} size={24} />
+                  <Target className="mr-4 mt-1 amesto-color" size={24} />
                   <p className="text-gray-800 leading-relaxed">{slide.content.cta}</p>
                 </div>
               </div>
 
-              <div className="bg-gray-800 text-white p-6 rounded-xl max-w-md" style={{animation: `slideInUp 0.8s ease-out 1.2s both`}}>
+              <div className="contact-card slide-in-up" style={{animationDelay: '1.2s'}}>
                 <div className="font-bold text-lg mb-2">{slide.content.contact.company}</div>
                 <div className="space-y-1 text-sm opacity-90">
                   <div>{slide.content.contact.address}</div>
-                  <div className="hover:text-blue-300 cursor-pointer transition-colors">t: {slide.content.contact.phone}</div>
-                  <div className="hover:text-blue-300 cursor-pointer transition-colors">e: {slide.content.contact.email}</div>
-                  <div className="hover:text-blue-300 cursor-pointer transition-colors">w: {slide.content.contact.website}</div>
+                  <div className="contact-link">t: {slide.content.contact.phone}</div>
+                  <div className="contact-link">e: {slide.content.contact.email}</div>
+                  <div className="contact-link">w: {slide.content.contact.website}</div>
                 </div>
               </div>
             </div>
@@ -737,45 +734,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
   };
 
   return (
-    <div className="w-full h-screen bg-gray-100 relative overflow-hidden">
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInUp {
-          from { opacity: 0; transform: translateY(50px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInLeft {
-          from { opacity: 0; transform: translateX(-30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes bounceIn {
-          0% { opacity: 0; transform: scale(0.3); }
-          50% { opacity: 1; transform: scale(1.05); }
-          70% { transform: scale(0.9); }
-          100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes rotate360 {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .hover\\:scale-102:hover {
-          transform: scale(1.02);
-        }
-        .hover\\:scale-105:hover {
-          transform: scale(1.05);
-        }
-      `}</style>
+    <div className="erp-presentation-container">
 
       {/* Main slide content */}
       <div className="w-full h-full" key={animationKey}>
@@ -783,11 +742,11 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
       </div>
 
       {/* Enhanced Navigation Controls */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 bg-black/90 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-2xl border border-white/20">
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 nav-controls">
         {/* Auto-play controls */}
         <button
           onClick={toggleAutoPlay}
-          className="p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 hover:scale-110"
+          className="nav-button"
           title={isAutoPlay ? 'Pause auto-play' : 'Start auto-play'}
         >
           {isAutoPlay ? <Pause size={18} color="white" /> : <Play size={18} color="white" />}
@@ -799,7 +758,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
-          className="p-3 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-110"
+          className="nav-button"
         >
           <ChevronLeft size={18} color="white" />
         </button>
@@ -810,10 +769,8 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`transition-all duration-300 rounded-full ${
-                index === currentSlide 
-                  ? 'w-8 h-3 bg-white' 
-                  : 'w-3 h-3 bg-white/40 hover:bg-white/60 hover:scale-125'
+              className={`slide-indicator ${
+                index === currentSlide ? 'active' : 'inactive'
               }`}
               title={`Slide ${index + 1}`}
             />
@@ -823,7 +780,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
         <button
           onClick={nextSlide}
           disabled={currentSlide === slides.length - 1}
-          className="p-3 rounded-full bg-white/20 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-110"
+          className="nav-button"
         >
           <ChevronRight size={18} color="white" />
         </button>
@@ -833,7 +790,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
         {/* Reset button */}
         <button
           onClick={resetPresentation}
-          className="p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 hover:scale-110"
+          className="nav-button"
           title="Reset presentation"
         >
           <RotateCcw size={18} color="white" />
@@ -857,20 +814,16 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
       <div className="absolute top-6 left-6 flex space-x-2">
         <button
           onClick={() => setViewMode('presentation')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-            viewMode === 'presentation' 
-              ? 'bg-white text-black shadow-lg' 
-              : 'bg-black/60 text-white hover:bg-black/80'
+          className={`view-mode-button ${
+            viewMode === 'presentation' ? 'active' : 'inactive'
           }`}
         >
           Presentasjon
         </button>
         <button
           onClick={() => {setViewMode('overview'); goToSlide(11);}}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-            viewMode === 'overview' 
-              ? 'bg-white text-black shadow-lg' 
-              : 'bg-black/60 text-white hover:bg-black/80'
+          className={`view-mode-button ${
+            viewMode === 'overview' ? 'active' : 'inactive'
           }`}
         >
           Dashboard
@@ -891,9 +844,7 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
             return (
               <div
                 key={index}
-                className={`flex items-center space-x-3 p-3 rounded-r-lg transition-all duration-300 ${
-                  isActive ? 'bg-white/20 backdrop-blur-sm transform translate-x-0' : 'transform -translate-x-8 opacity-60 hover:translate-x-0 hover:opacity-100'
-                }`}
+                className={`phase-indicator ${isActive ? 'active' : 'inactive'}`}
               >
                 <div
                   className="w-3 h-3 rounded-full"
@@ -923,64 +874,9 @@ For å finne svaret har Amesto Solutions gjennomført kvalitative intervjuer med
       {/* Auto-play progress bar */}
       {isAutoPlay && (
         <div className="absolute top-0 left-0 w-full h-1 bg-black/20">
-          <div 
-            className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-8000 ease-linear"
-            style={{
-              width: '100%',
-              animation: 'autoPlayProgress 8s linear infinite'
-            }}
-          ></div>
+          <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 auto-play-progress"></div>
         </div>
       )}
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInUp {
-          from { opacity: 0; transform: translateY(50px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInLeft {
-          from { opacity: 0; transform: translateX(-30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-          from { opacity: 0; transform: translateX(30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes bounceIn {
-          0% { opacity: 0; transform: scale(0.3); }
-          50% { opacity: 1; transform: scale(1.05); }
-          70% { transform: scale(0.9); }
-          100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes rotate360 {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes autoPlayProgress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-        .hover\\:scale-102:hover {
-          transform: scale(1.02);
-        }
-        .hover\\:scale-105:hover {
-          transform: scale(1.05);
-        }
-        .hover\\:scale-110:hover {
-          transform: scale(1.1);
-        }
-        .hover\\:scale-125:hover {
-          transform: scale(1.25);
-        }
-      `}</style>
     </div>
   );
 };
